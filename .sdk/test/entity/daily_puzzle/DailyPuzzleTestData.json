@@ -1,0 +1,57 @@
+{
+  "existing": {
+    "daily_puzzle": {
+      "DAILY_PUZZLE00": {
+        "date": "s50",
+        "fen": "s51",
+        "gameUrl": "s52",
+        "puzzleId": "s53",
+        "rating": 84,
+        "sideToMove": "s55",
+        "solution": [],
+        "themes": []
+      },
+      "DAILY_PUZZLE01": {
+        "date": "sa0",
+        "fen": "sa1",
+        "gameUrl": "sa2",
+        "puzzleId": "sa3",
+        "rating": 164,
+        "sideToMove": "sa5",
+        "solution": [],
+        "themes": []
+      },
+      "DAILY_PUZZLE02": {
+        "date": "sf0",
+        "fen": "sf1",
+        "gameUrl": "sf2",
+        "puzzleId": "sf3",
+        "rating": 244,
+        "sideToMove": "sf5",
+        "solution": [],
+        "themes": []
+      }
+    }
+  },
+  "new": {
+    "daily_puzzle": {
+      "daily_puzzle_ref01": {
+        "date": "s140",
+        "fen": "s141",
+        "gameUrl": "s142",
+        "puzzleId": "s143",
+        "rating": 324,
+        "sideToMove": "s145",
+        "solution": [],
+        "themes": []
+      }
+    }
+  },
+  "requests": {
+    "GET /daily-puzzle": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

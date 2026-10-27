@@ -1,0 +1,5 @@
+# Flows
+
+@"./BasicDailyPuzzleFlow.aontu"
+@"./BasicEloFlow.aontu"
+@"./BasicGameFlow.aontu"

@@ -1,0 +1,111 @@
+# Entity: daily_puzzle
+
+main: kit: entity: daily_puzzle: {
+
+  alias: field: {}
+
+  fields: {
+    date: {
+      h: "Date"
+      n: "date"
+      r: false
+      t: "`$STRING`"
+    }
+    fen: {
+      h: "Fen"
+      n: "fen"
+      r: false
+      sh: "Position in FEN notation."
+      t: "`$STRING`"
+    }
+    gameUrl: {
+      fo: "uri"
+      h: "Game Url"
+      n: "gameUrl"
+      r: false
+      t: [
+        "`$ONE`"
+        [
+          "`$STRING`"
+          "`$NULL`"
+        ]
+      ]
+    }
+    puzzleId: {
+      h: "Puzzle Id"
+      n: "puzzleId"
+      r: false
+      t: "`$STRING`"
+    }
+    rating: {
+      h: "Rating"
+      n: "rating"
+      r: false
+      t: "`$INTEGER`"
+    }
+    sideToMove: {
+      h: "Side To Move"
+      n: "sideToMove"
+      r: false
+      t: "`$STRING`"
+    }
+    solution: {
+      h: "Solution"
+      n: "solution"
+      r: false
+      sh: "Moves in UCI notation; first move sets up the puzzle."
+      t: "`$ARRAY`"
+    }
+    themes: {
+      h: "Themes"
+      n: "themes"
+      r: false
+      t: "`$ARRAY`"
+    }
+  }
+
+  name: "daily_puzzle"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "GET /daily-puzzle"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            query: [
+              {
+                k: "query"
+                n: "date"
+                or: "date"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/daily-puzzle"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "daily-puzzle"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

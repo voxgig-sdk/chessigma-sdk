@@ -1,0 +1,22 @@
+# BasicDailyPuzzleFlow
+
+main: kit: flow: BasicDailyPuzzleFlow:
+{
+  entity: "daily_puzzle",
+  kind: "basic",
+  name: "BasicDailyPuzzleFlow",
+  step: [
+    {
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "daily_puzzle_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicDailyPuzzleFlow"
+}

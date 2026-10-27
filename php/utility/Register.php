@@ -1,0 +1,72 @@
+<?php
+declare(strict_types=1);
+
+// Chessigma SDK utility registration
+
+require_once __DIR__ . '/../core/UtilityType.php';
+require_once __DIR__ . '/Clean.php';
+require_once __DIR__ . '/Done.php';
+require_once __DIR__ . '/MakeError.php';
+require_once __DIR__ . '/FeatureAdd.php';
+require_once __DIR__ . '/FeatureHook.php';
+require_once __DIR__ . '/FeatureInit.php';
+require_once __DIR__ . '/Fetcher.php';
+require_once __DIR__ . '/MakeFetchDef.php';
+require_once __DIR__ . '/MakeContext.php';
+require_once __DIR__ . '/MakeOptions.php';
+require_once __DIR__ . '/MakeRequest.php';
+require_once __DIR__ . '/MakeResponse.php';
+require_once __DIR__ . '/MakeResult.php';
+require_once __DIR__ . '/MakePoint.php';
+require_once __DIR__ . '/MakeSpec.php';
+require_once __DIR__ . '/MakeUrl.php';
+require_once __DIR__ . '/Param.php';
+require_once __DIR__ . '/PrepareAuth.php';
+require_once __DIR__ . '/PrepareBody.php';
+require_once __DIR__ . '/Graphql.php';
+require_once __DIR__ . '/PrepareHeaders.php';
+require_once __DIR__ . '/PrepareMethod.php';
+require_once __DIR__ . '/PrepareParams.php';
+require_once __DIR__ . '/PreparePath.php';
+require_once __DIR__ . '/PrepareQuery.php';
+require_once __DIR__ . '/ResultBasic.php';
+require_once __DIR__ . '/ResultBody.php';
+require_once __DIR__ . '/ResultHeaders.php';
+require_once __DIR__ . '/TransformRequest.php';
+require_once __DIR__ . '/TransformResponse.php';
+
+ChessigmaUtility::setRegistrar(function (ChessigmaUtility $u): void {
+    $u->clean = [ChessigmaClean::class, 'call'];
+    $u->clean_add = [ChessigmaClean::class, 'add'];
+    $u->clean_explain = [ChessigmaDone::class, 'clean_explain'];
+    $u->done = [ChessigmaDone::class, 'call'];
+    $u->make_error = [ChessigmaMakeError::class, 'call'];
+    $u->feature_add = [ChessigmaFeatureAdd::class, 'call'];
+    $u->feature_hook = [ChessigmaFeatureHook::class, 'call'];
+    $u->feature_init = [ChessigmaFeatureInit::class, 'call'];
+    $u->fetcher = [ChessigmaFetcher::class, 'call'];
+    $u->make_fetch_def = [ChessigmaMakeFetchDef::class, 'call'];
+    $u->make_context = [ChessigmaMakeContext::class, 'call'];
+    $u->make_options = [ChessigmaMakeOptions::class, 'call'];
+    $u->make_request = [ChessigmaMakeRequest::class, 'call'];
+    $u->make_response = [ChessigmaMakeResponse::class, 'call'];
+    $u->make_result = [ChessigmaMakeResult::class, 'call'];
+    $u->make_point = [ChessigmaMakePoint::class, 'call'];
+    $u->make_spec = [ChessigmaMakeSpec::class, 'call'];
+    $u->make_url = [ChessigmaMakeUrl::class, 'call'];
+    $u->param = [ChessigmaParam::class, 'call'];
+    $u->prepare_auth = [ChessigmaPrepareAuth::class, 'call'];
+    $u->prepare_body = [ChessigmaPrepareBody::class, 'call'];
+    $u->prepare_headers = [ChessigmaPrepareHeaders::class, 'call'];
+    $u->prepare_method = [ChessigmaPrepareMethod::class, 'call'];
+    $u->prepare_params = [ChessigmaPrepareParams::class, 'call'];
+    $u->prepare_path = [ChessigmaPreparePath::class, 'call'];
+    $u->prepare_query = [ChessigmaPrepareQuery::class, 'call'];
+    $u->graphql_body = [ChessigmaGraphql::class, 'body'];
+    $u->graphql_errors = [ChessigmaGraphql::class, 'errors'];
+    $u->result_basic = [ChessigmaResultBasic::class, 'call'];
+    $u->result_body = [ChessigmaResultBody::class, 'call'];
+    $u->result_headers = [ChessigmaResultHeaders::class, 'call'];
+    $u->transform_request = [ChessigmaTransformRequest::class, 'call'];
+    $u->transform_response = [ChessigmaTransformResponse::class, 'call'];
+});

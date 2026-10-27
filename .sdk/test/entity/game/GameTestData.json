@@ -1,0 +1,53 @@
+{
+  "existing": {
+    "game": {
+      "GAME00": {
+        "analysis": {},
+        "gameId": "s3d",
+        "id": "GAME00",
+        "metadata": {},
+        "pgn": "s40",
+        "status": "s41"
+      },
+      "GAME01": {
+        "analysis": {},
+        "gameId": "s79",
+        "id": "GAME01",
+        "metadata": {},
+        "pgn": "s7c",
+        "status": "s7d"
+      },
+      "GAME02": {
+        "analysis": {},
+        "gameId": "sb5",
+        "id": "GAME02",
+        "metadata": {},
+        "pgn": "sb8",
+        "status": "sb9"
+      }
+    }
+  },
+  "new": {
+    "game": {
+      "game_ref01": {
+        "analysis": {},
+        "gameId": "sf1",
+        "metadata": {},
+        "pgn": "sf4",
+        "status": "sf5"
+      }
+    }
+  },
+  "requests": {
+    "POST /game": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    },
+    "GET /game/{gameId}": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

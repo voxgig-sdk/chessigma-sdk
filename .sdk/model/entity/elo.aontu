@@ -1,0 +1,142 @@
+# Entity: elo
+
+main: kit: entity: elo: {
+
+  alias: field: {}
+
+  fields: {
+    change: {
+      h: "Change"
+      n: "change"
+      r: false
+      t: "`$INTEGER`"
+    }
+    expectedScore: {
+      h: "Expected Score"
+      n: "expectedScore"
+      r: false
+      sh: "Probability of scoring (0–1)."
+      t: "`$NUMBER`"
+    }
+    kFactor: {
+      h: "K Factor"
+      n: "kFactor"
+      r: false
+      t: "`$INTEGER`"
+    }
+    newRating: {
+      h: "New Rating"
+      n: "newRating"
+      r: false
+      t: "`$INTEGER`"
+    }
+    opponentRating: {
+      h: "Opponent Rating"
+      n: "opponentRating"
+      r: false
+      t: "`$INTEGER`"
+    }
+    result: {
+      h: "Result"
+      n: "result"
+      r: false
+      t: "`$STRING`"
+    }
+    system: {
+      h: "System"
+      n: "system"
+      r: false
+      t: "`$STRING`"
+    }
+    yourRating: {
+      h: "Your Rating"
+      n: "yourRating"
+      r: false
+      t: "`$INTEGER`"
+    }
+  }
+
+  name: "elo"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /elo-calculator"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            query: [
+              {
+                k: "query"
+                n: "k_factor"
+                or: "kFactor"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                ex: 1400
+                k: "query"
+                n: "opponent_rating"
+                or: "opponentRating"
+                r: true
+                t: "`$INTEGER`"
+              }
+              {
+                ex: "win"
+                k: "query"
+                n: "result"
+                or: "result"
+                r: true
+                t: "`$STRING`"
+              }
+              {
+                ex: "fide"
+                k: "query"
+                n: "system"
+                or: "system"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: 1500
+                k: "query"
+                n: "your_rating"
+                or: "yourRating"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/elo-calculator"
+          q: {
+            exist: [
+              "opponent_rating"
+              "result"
+              "your_rating"
+            ]
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "elo-calculator"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

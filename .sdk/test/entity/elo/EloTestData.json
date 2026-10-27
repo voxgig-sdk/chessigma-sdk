@@ -1,0 +1,60 @@
+{
+  "existing": {
+    "elo": {
+      "ELO00": {
+        "change": 80,
+        "expectedScore": 81,
+        "kFactor": 82,
+        "newRating": 83,
+        "opponentRating": 84,
+        "result": "s55",
+        "system": "s56",
+        "yourRating": 87,
+        "id": "ELO00"
+      },
+      "ELO01": {
+        "change": 160,
+        "expectedScore": 161,
+        "kFactor": 162,
+        "newRating": 163,
+        "opponentRating": 164,
+        "result": "sa5",
+        "system": "sa6",
+        "yourRating": 167,
+        "id": "ELO01"
+      },
+      "ELO02": {
+        "change": 240,
+        "expectedScore": 241,
+        "kFactor": 242,
+        "newRating": 243,
+        "opponentRating": 244,
+        "result": "sf5",
+        "system": "sf6",
+        "yourRating": 247,
+        "id": "ELO02"
+      }
+    }
+  },
+  "new": {
+    "elo": {
+      "elo_ref01": {
+        "change": 320,
+        "expectedScore": 321,
+        "kFactor": 322,
+        "newRating": 323,
+        "opponentRating": 324,
+        "result": "s145",
+        "system": "s146",
+        "yourRating": 327
+      }
+    }
+  },
+  "requests": {
+    "GET /elo-calculator": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

@@ -1,0 +1,142 @@
+# Entity: game
+
+main: kit: entity: game: {
+
+  alias: field: {}
+
+  fields: {
+    analysis: {
+      h: "Analysis"
+      n: "analysis"
+      r: false
+      t: "`$OBJECT`"
+    }
+    gameId: {
+      fo: "uuid"
+      h: "Game Id"
+      n: "gameId"
+      r: false
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: false
+      t: "`$STRING`"
+    }
+    metadata: {
+      h: "Metadata"
+      n: "metadata"
+      r: false
+      t: "`$OBJECT`"
+    }
+    pgn: {
+      h: "Pgn"
+      n: "pgn"
+      r: true
+      sh: "PGN text."
+      t: "`$STRING`"
+    }
+    status: {
+      h: "Status"
+      n: "status"
+      r: false
+      t: "`$STRING`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "game"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          bf: [
+            "pgn"
+          ]
+          co: {
+            id: "POST /game"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/game"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "game"
+            }
+          ]
+          t: {
+            req: {
+              pgn: "`reqdata.pgn`"
+            }
+            res: "`body`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /game/{gameId}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "gameId"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/game/{gameId}"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          r: {
+            param: {
+              gameId: "id"
+            }
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "game"
+            }
+            {
+              var: "id"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

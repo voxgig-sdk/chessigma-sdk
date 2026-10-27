@@ -1,0 +1,21 @@
+{
+  "files": [
+    "SUMMARY.md"
+  ],
+  "config": ".sdk/doc/qa/vale.ini",
+  "routes": {},
+  "quoted": {
+    "SUMMARY.md": [
+      "Computed rating change",
+      "Free, no-auth API for the Chessigma chess analysis platform. Submit games (PGN) for analysis, read analysis results, compute Elo rating changes, and fetch the daily puzzle. Chess engine analysis runs client-side in the browser (Stockfish WebAssembly), so this API is compute-free: GET /game/&#123;gameId&#125; returns analysis only after a user has opened the game page and triggered it. No signup, no API key, no paywall. Global rate limit: 30 requests/minute across all callers.",
+      "Game analysis",
+      "Game submitted",
+      "Moves in UCI notation; first move sets up the puzzle.",
+      "PGN text.",
+      "Position in FEN notation.",
+      "Probability of scoring (0–1).",
+      "Production",
+      "The daily puzzle"
+    ]
+  }
+}

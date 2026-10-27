@@ -1,0 +1,28 @@
+# BasicEloFlow
+
+main: kit: flow: BasicEloFlow:
+{
+  entity: "elo",
+  kind: "basic",
+  name: "BasicEloFlow",
+  step: [
+    {
+      i: {
+        ref: "elo_ref01",
+        srcdatavar: "elo_ref01_data",
+        suffix: "_dt0"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-elo_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicEloFlow"
+}

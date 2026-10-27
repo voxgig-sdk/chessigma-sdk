@@ -1,0 +1,567 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Chessigma Public API",
+    "version": "1.0.0",
+    "description": "Free, no-auth API for the Chessigma chess analysis platform. Submit games (PGN) for analysis, read analysis results, compute Elo rating changes, and fetch the daily puzzle. Chess engine analysis runs client-side in the browser (Stockfish WebAssembly), so this API is compute-free: GET /game/{gameId} returns analysis only after a user has opened the game page and triggered it. No signup, no API key, no paywall. Global rate limit: 30 requests/minute across all callers.",
+    "contact": {
+      "name": "Chessigma",
+      "url": "https://www.chessigma.com/developers"
+    },
+    "license": {
+      "name": "Terms of Service",
+      "url": "https://www.chessigma.com/tos"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.chessigma.com/public-api/v1",
+      "description": "Production"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/game": {
+      "post": {
+        "operationId": "submitGame",
+        "summary": "Submit a game (PGN) for analysis",
+        "description": "Stores a chess game and returns a URL to view and analyze it on Chessigma. Duplicate games (same players + date) are deduplicated and return the existing gameId.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GameSubmission"
+              },
+              "example": {
+                "pgn": "[White \"Alice\"]\n[Black \"Bob\"]\n[Result \"1-0\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Game submitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSubmissionResponse"
+                },
+                "example": {
+                  "gameId": "f222a278-3ed5-46c5-bd14-d0af7fa92e3d",
+                  "url": "https://www.chessigma.com/games/f222a278-3ed5-46c5-bd14-d0af7fa92e3d",
+                  "status": "submitted",
+                  "message": "Successfully saved 1 game"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing PGN, or missing required tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (30 req/min global)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/{gameId}": {
+      "get": {
+        "operationId": "getGame",
+        "summary": "Retrieve analysis for a submitted game",
+        "description": "Returns game metadata and analysis. Because analysis runs client-side, this returns data only if a user has already opened the game page and triggered analysis. Only games submitted via this public API are readable here.",
+        "parameters": [
+          {
+            "name": "gameId",
+            "in": "path",
+            "required": true,
+            "description": "UUID returned by POST /game.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game analysis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameAnalysisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid game ID format (must be a UUID)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Game exists but was not submitted via the public API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found or analysis not yet available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/elo-calculator": {
+      "get": {
+        "operationId": "calculateElo",
+        "summary": "Compute an Elo rating change for a single game",
+        "description": "Pure arithmetic. Returns the new rating, point change, and expected score.",
+        "parameters": [
+          {
+            "name": "yourRating",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 4000
+            },
+            "example": 1500
+          },
+          {
+            "name": "opponentRating",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 4000
+            },
+            "example": 1400
+          },
+          {
+            "name": "result",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "win",
+                "draw",
+                "loss"
+              ]
+            },
+            "example": "win"
+          },
+          {
+            "name": "system",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "fide",
+                "chesscom",
+                "lichess"
+              ],
+              "default": "fide"
+            }
+          },
+          {
+            "name": "kFactor",
+            "in": "query",
+            "required": false,
+            "description": "Override the default K-factor for the chosen system.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Computed rating change",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EloResponse"
+                },
+                "example": {
+                  "yourRating": 1500,
+                  "opponentRating": 1400,
+                  "result": "win",
+                  "system": "fide",
+                  "kFactor": 20,
+                  "expectedScore": 0.6401,
+                  "newRating": 1507,
+                  "change": 7
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          }
+        }
+      }
+    },
+    "/daily-puzzle": {
+      "get": {
+        "operationId": "getDailyPuzzle",
+        "summary": "Get the daily chess puzzle",
+        "description": "Returns the single daily puzzle for today, or a past date via ?date=YYYY-MM-DD. Returns exactly one puzzle — the full puzzle database is not exposed.",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "Past date in YYYY-MM-DD format. Defaults to today. Future dates are rejected.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The daily puzzle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyPuzzle"
+                },
+                "example": {
+                  "date": "2026-05-23",
+                  "puzzleId": "abcde",
+                  "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+                  "sideToMove": "black",
+                  "rating": 1523,
+                  "themes": [
+                    "fork",
+                    "middlegame"
+                  ],
+                  "solution": [
+                    "d7d5",
+                    "e4d5"
+                  ],
+                  "gameUrl": "https://lichess.org/abc123"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GameSubmission": {
+        "type": "object",
+        "required": [
+          "pgn"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "pgn": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "description": "PGN text. Must include [White], [Black], [Result] tags and a valid moves section."
+          }
+        }
+      },
+      "GameSubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "gameId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Open this to view and analyze the game."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "submitted"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "GameAnalysisResponse": {
+        "type": "object",
+        "properties": {
+          "gameId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed"
+            ]
+          },
+          "analysis": {
+            "type": "object",
+            "properties": {
+              "game": {
+                "$ref": "#/components/schemas/Game"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "analysisCompletedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Game": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pgn": {
+            "type": "string"
+          },
+          "white_username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "black_username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "white_rating": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "black_rating": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "white_result": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "black_result": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "time_class": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "time_control": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "EloResponse": {
+        "type": "object",
+        "properties": {
+          "yourRating": {
+            "type": "integer"
+          },
+          "opponentRating": {
+            "type": "integer"
+          },
+          "result": {
+            "type": "string",
+            "enum": [
+              "win",
+              "draw",
+              "loss"
+            ]
+          },
+          "system": {
+            "type": "string",
+            "enum": [
+              "fide",
+              "chesscom",
+              "lichess"
+            ]
+          },
+          "kFactor": {
+            "type": "integer"
+          },
+          "expectedScore": {
+            "type": "number",
+            "description": "Probability of scoring (0–1)."
+          },
+          "newRating": {
+            "type": "integer"
+          },
+          "change": {
+            "type": "integer"
+          }
+        }
+      },
+      "DailyPuzzle": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "puzzleId": {
+            "type": "string"
+          },
+          "fen": {
+            "type": "string",
+            "description": "Position in FEN notation."
+          },
+          "sideToMove": {
+            "type": "string",
+            "enum": [
+              "white",
+              "black"
+            ]
+          },
+          "rating": {
+            "type": "integer"
+          },
+          "themes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "solution": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Moves in UCI notation; first move sets up the puzzle."
+          },
+          "gameUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "description": "Optional validation detail."
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    }
+  }
+}

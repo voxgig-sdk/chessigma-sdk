@@ -1,0 +1,30 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      auth: false
+      contact: {
+        name: "Chessigma"
+        url: "https://www.chessigma.com/developers"
+      }
+      description: "Free, no-auth API for the Chessigma chess analysis platform. Submit games (PGN) for analysis, read analysis results, compute Elo rating changes, and fetch the daily puzzle. Chess engine analysis runs client-side in the browser (Stockfish WebAssembly), so this API is compute-free: GET /game/{gameId} returns analysis only after a user has opened the game page and triggered it. No signup, no API key, no paywall. Global rate limit: 30 requests/minute across all callers."
+      license: {
+        name: "Terms of Service"
+        url: "https://www.chessigma.com/tos"
+      }
+      servers: [
+        {
+          description: "Production"
+          url: "https://www.chessigma.com/public-api/v1"
+        }
+      ]
+      summary: "Free, no-auth API for the Chessigma chess analysis platform."
+      title: "Chessigma Public API"
+      version: "1.0.0"
+      website: "https://chessigma.com"
+    }
+  }
+}
+
